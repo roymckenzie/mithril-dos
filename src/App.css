@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100;
+}
+
+.app {
+  @apply max-w-lg mx-auto grid grid-rows-[min-content_auto_auto] grid-cols-[min-content_auto] gap-4 mt-4;
+}
+
+.app-header {
+  @apply col-start-1 col-span-2 row-span-1;
+
+  h1 {
+    @apply text-3xl font-semibold;
+  }
+
+  p {
+    @apply text-sm font-light text-gray-500;
+
+    a {
+      @apply underline text-indigo-600;
+    }
+  }
+}
+
+.app-navigation {
+  @apply col-start-1 col-span-1 row-start-2 row-span-2;
+
+  ul {
+    @apply grid gap-3
+  }
+
+  a {
+    @apply grid grid-flow-col gap-5 items-center text-gray-700 bg-gray-200 hover:bg-gray-300 p-2 px-4 rounded-md;
+
+    .count {
+      @apply text-sm text-gray-400 justify-self-end pointer-events-none;
+    }
+
+    &.active {
+      @apply bg-indigo-600 text-white;
+
+      .count {
+        @apply text-gray-300;
+      }
+    }
+
+    &.dragged-to {
+      @apply bg-indigo-600 text-white;
+    }
+  }
+}
+
+.app-main {
+  @apply col-start-2 col-span-1 row-start-2 row-span-2;
+}
+
+.to-do-list {
+  @apply grid p-0 gap-2;
+
+  .to-do {
+    @apply shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
+
+    label {
+      @apply p-3 grid grid-cols-[auto_min-content_min-content] gap-3 items-center font-light cursor-grab;
+
+      .complete-to-do {
+        @apply rounded-xl h-6 w-6 cursor-pointer border-gray-300;
+
+        &:hover {
+          @apply bg-indigo-100 border-indigo-400;
+        }
+
+        &:checked {
+          @apply bg-indigo-500 border-transparent;
+        }
+
+        &:focus {
+          @apply ring-indigo-400;
+        }
+      }
+
+      .delete-to-do {
+        @apply opacity-0 text-red-500 text-sm transition-opacity cursor-pointer delay-300;
+      }
+    }
+
+    &:hover {
+
+      .delete-to-do {
+        @apply opacity-100;
+      }
+    }
+
+    &.dragging {;
+
+      label {
+        @apply hover:!cursor-grabbing !cursor-grabbing;
+
+        .delete-to-do {
+          @apply !opacity-0;
+        }
+      }
+    }
+  }
+}
+
+.not-uncompleted {
+  .to-do {
+    @apply opacity-50;
+
+    &:hover {
+      @apply opacity-100;
+    }
+  }
+}
+
+.to-do-form {
+  @apply grid grid-cols-[auto_min-content] p-2 bg-gray-300 shadow-inner rounded-md mb-2;
+
+  .new-to-do-text {
+    @apply border-gray-400 rounded-md rounded-tr-none rounded-br-none;
+
+    &:focus {
+      @apply ring-0
+    }
+  }
+
+  .add-to-do {
+    @apply p-2 bg-gray-400 hover:bg-gray-500 text-gray-50 rounded-tr rounded-br;
+  }
+}
+
+.no-to-dos {
+  @apply bg-gray-200 text-gray-400 p-3 text-center text-sm font-light border border-gray-300 border-dashed rounded;
+}
