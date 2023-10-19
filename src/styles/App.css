@@ -83,14 +83,14 @@ body {
         }
       }
 
-      .delete-to-do {
+      .trash-to-do {
         @apply opacity-0 text-red-500 text-sm transition-opacity cursor-pointer delay-300;
       }
     }
 
     &:hover {
 
-      .delete-to-do {
+      .trash-to-do {
         @apply opacity-100;
       }
     }
@@ -100,7 +100,7 @@ body {
       label {
         @apply hover:!cursor-grabbing !cursor-grabbing;
 
-        .delete-to-do {
+        .trash-to-do {
           @apply !opacity-0;
         }
       }
@@ -132,6 +132,14 @@ body {
   .add-to-do {
     @apply p-2 bg-gray-400 hover:bg-gray-500 text-gray-50 rounded-tr rounded-br;
   }
+}
+
+.controls {
+  @apply grid justify-items-end mb-2;
+}
+
+.delete-all {
+  @apply bg-red-50 border border-red-500 text-red-500 rounded p-2 px-3 text-sm;
 }
 
 .no-to-dos {

@@ -2,7 +2,7 @@
 class ToDoController {
 
   newToDoText = ''
-  toDos: ToDo[];
+  readonly toDos: ToDo[];
 
   constructor(toDos: ToDo[]) {
     this.toDos = toDos;
@@ -64,6 +64,14 @@ class ToDoController {
     this.toDos.splice(index, 1);
 
     this.updateStorage();
+  }
+
+  deleteTrashed() {
+    if (!confirm('Are you sure you want to permanently delete your trashed to-dos?')) return;
+    this.trashed().forEach(toDo => {
+      const index = this.toDos.indexOf(toDo);
+      this.toDos.splice(index, 1);
+    });
   }
 
   add() {

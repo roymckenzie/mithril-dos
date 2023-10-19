@@ -58,18 +58,18 @@ const ToDoListItem: m.Comp<Attr, State> = {
       m(
         'label',
         {
-          for: toDo.id
+          for: toDo.trashed ? null : toDo.id
         },
         toDo.description,
-        m(
-          'button.delete-to-do',
+        toDo.trashed ? null : m(
+          'button.trash-to-do',
           {
             onclick: toDo.trashed ? deleteToDo : trashToDo,
             'data-to-do-id': toDo.id
           },
-          toDo.trashed ? 'Delete' : 'Trash'
+          'Trash'
         ),
-        m(
+        toDo.trashed ? null : m(
           'input[type=checkbox].complete-to-do',
           {
             checked: toDo.completed,

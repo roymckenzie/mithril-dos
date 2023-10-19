@@ -12,6 +12,9 @@ const Trashed: m.Comp<{},State> = {
   view: ({ state: { controller }}) => {
     return m('article.completed',
       controller.trashed().length === 0 ? m(NoToDos, 'No trashed to-dos.') : null,
+      controller.trashed().length > 0 ? m('menu.controls',
+        m('li', m('button.delete-all', { onclick: () => controller.deleteTrashed() }, 'Delete all'))
+      ) : null,
       m(ToDoList, { toDos: controller.trashed() })
     );
   }
