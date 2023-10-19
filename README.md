@@ -2,6 +2,9 @@
 
 A basic To-Do app built with [Mithril](https://mithril.js.org/), [Vite](https://vitejs.dev/) and TypeScript.
 
+### Features
+* To-dos are stored in localStorage
+* Drag and drop To-dos to Completed or Trash
 
 ## Get Started
 

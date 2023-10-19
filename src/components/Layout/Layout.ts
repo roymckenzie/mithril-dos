@@ -1,14 +1,14 @@
 import m from 'mithril';
 import Navigation from './Navigation';
 import Header from './Header';
-import Controller, { ToDoItemController } from '../../controllers/ToDoItemController';
+import ToDoController from '../../controllers/ToDoController';
 
 interface State {
-  controller: ToDoItemController
+  controller: typeof ToDoController
 }
 
 const Layout: m.Comp<{},State> = {
-  controller: Controller,
+  controller: ToDoController,
   view: ({ children, state: { controller } }) => {
     return m('.app',
       m(Header),

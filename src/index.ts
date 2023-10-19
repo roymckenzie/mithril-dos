@@ -1,5 +1,5 @@
 import m, { RouteDefs } from "mithril";
-import './App.css';
+import './styles/App.css';
 import Home from "./components/Pages/Home";
 import Layout from "./components/Layout/Layout";
 import Completed from "./components/Pages/Completed";

@@ -1,8 +1,8 @@
 import m from 'mithril';
-import ToDoItemController from '../../controllers/ToDoItemController';
+import ToDoController from '../../controllers/ToDoController';
 
 interface Attr {
-  toDoItem: ToDoItem;
+  toDo: ToDo;
 }
 
 interface State {
@@ -21,24 +21,24 @@ const ToDoListItem: m.Comp<Attr, State> = {
     }
     const toDoId = event.target.getAttribute('data-to-do-id');
     if (!toDoId) return;
-    ToDoItemController.delete(toDoId);
+    ToDoController.delete(toDoId);
   },
   trashToDo(event: PointerEvent & { target: HTMLButtonElement }) {
     event.preventDefault();
     event.stopPropagation();
     const toDoId = event.target.getAttribute('data-to-do-id');
     if (!toDoId) return;
-    ToDoItemController.trash(toDoId);
+    ToDoController.trash(toDoId);
   },
   completeToDo(event: PointerEvent & { target: HTMLInputElement }) {
     event.preventDefault();
-    ToDoItemController.complete(event.target.id);
+    ToDoController.complete(event.target.id);
   },
   unCompleteToDo(event: PointerEvent & { target: HTMLInputElement }) {
     event.preventDefault();
-    ToDoItemController.unComplete(event.target.id);
+    ToDoController.unComplete(event.target.id);
   },
-  view: ({ attrs: { toDoItem }, state: { completeToDo, unCompleteToDo, trashToDo, deleteToDo } }) => {
+  view: ({ attrs: { toDo }, state: { completeToDo, unCompleteToDo, trashToDo, deleteToDo } }) => {
     return m(
       'li.to-do[draggable]',
       {
@@ -48,7 +48,7 @@ const ToDoListItem: m.Comp<Attr, State> = {
           event.dataTransfer.dropEffect = 'move';
           event.dataTransfer.effectAllowed = 'move';
           event.target.style.cursor = 'grabbing'
-          event.dataTransfer.setData('id', toDoItem.id);
+          event.dataTransfer.setData('id', toDo.id);
           event.dataTransfer.setData('text/plain', 'This can be dragged!');
         },
         ondragend: (event: DragEvent & { target: HTMLElement}) => {
@@ -58,24 +58,24 @@ const ToDoListItem: m.Comp<Attr, State> = {
       m(
         'label',
         {
-          for: toDoItem.id
+          for: toDo.id
         },
-        toDoItem.description,
+        toDo.description,
         m(
           'button.delete-to-do',
           {
-            onclick: toDoItem.trashed ? deleteToDo : trashToDo,
-            'data-to-do-id': toDoItem.id
+            onclick: toDo.trashed ? deleteToDo : trashToDo,
+            'data-to-do-id': toDo.id
           },
-          toDoItem.trashed ? 'Delete' : 'Trash'
+          toDo.trashed ? 'Delete' : 'Trash'
         ),
         m(
           'input[type=checkbox].complete-to-do',
           {
-            checked: toDoItem.completed,
-            id: toDoItem.id,
-            onclick: toDoItem.completed ? unCompleteToDo : completeToDo,
-            disabled: toDoItem.trashed ? true : false
+            checked: toDo.completed,
+            id: toDo.id,
+            onclick: toDo.completed ? unCompleteToDo : completeToDo,
+            disabled: toDo.trashed ? true : false
           }
         )
       ),

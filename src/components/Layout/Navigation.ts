@@ -1,5 +1,5 @@
 import m from 'mithril'
-import Controller from '../../controllers/ToDoItemController'
+import ToDoController from '../../controllers/ToDoController'
 
 interface Attr {
   notCompletedCount: number;
@@ -25,15 +25,15 @@ const dragEvents: m.Attributes = {
 
     switch (event.target.id) {
       case 'home':
-        Controller.unComplete(toDoId);
-        Controller.unTrash(toDoId);
+        ToDoController.unComplete(toDoId);
+        ToDoController.unTrash(toDoId);
         break;
       case 'completed':
-        Controller.complete(toDoId);
-        Controller.unTrash(toDoId);
+        ToDoController.complete(toDoId);
+        ToDoController.unTrash(toDoId);
         break;
       case 'trashed':
-        Controller.trash(toDoId);
+        ToDoController.trash(toDoId);
         break;
     }
   }

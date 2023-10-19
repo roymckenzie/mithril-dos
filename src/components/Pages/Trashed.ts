@@ -1,18 +1,18 @@
 import m from 'mithril';
 import ToDoList from '../ToDoList/ToDoList';
-import Controller, { ToDoItemController } from '../../controllers/ToDoItemController';
+import ToDoController from '../../controllers/ToDoController';
 import NoToDos from '../ToDoList/NoToDos';
 
 interface State {
-  controller: ToDoItemController;
+  controller: typeof ToDoController;
 }
 
 const Trashed: m.Comp<{},State> = {
-  controller: Controller,
+  controller: ToDoController,
   view: ({ state: { controller }}) => {
     return m('article.completed',
       controller.trashed().length === 0 ? m(NoToDos, 'No trashed to-dos.') : null,
-      m(ToDoList, { toDoItems: controller.trashed() })
+      m(ToDoList, { toDos: controller.trashed() })
     );
   }
 }

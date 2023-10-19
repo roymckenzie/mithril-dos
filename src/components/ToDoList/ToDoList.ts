@@ -1,15 +1,15 @@
 import m from 'mithril';
-import ToDoListItem from './ToDoListItem';
+import ToDoListItem from './ToDo';
 
 interface Attr {
-  toDoItems: ToDoItem[];
+  toDos: ToDo[];
 }
 
 const ToDoList: m.Component<Attr> = {
-  view: ({ attrs: { toDoItems }}) => {
+  view: ({ attrs: { toDos }}) => {
     return m('ul.to-do-list',
-      toDoItems.map(toDoItem => {
-        return m(ToDoListItem, { toDoItem, key: toDoItem.id });
+      toDos.map(toDo => {
+        return m(ToDoListItem, { toDo, key: toDo.id });
       })
     );
   }
