@@ -26,7 +26,7 @@ const Trashed: m.Comp<{}, State> = {
                 {
                   onclick: () => controller.deleteTrashed(),
                 },
-                icon('trash', 'h-4 w-4'),
+                icon('trash', { class: 'h-4 w-4' }),
                 'Delete all',
               ),
             ),

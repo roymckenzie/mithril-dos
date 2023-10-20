@@ -15,8 +15,6 @@
     "isolatedModules": true,
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
-    "types": [
-      "vite/client"
-    ]
-  },
+    "types": ["vite/client"]
+  }
 }

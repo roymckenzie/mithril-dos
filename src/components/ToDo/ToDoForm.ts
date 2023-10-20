@@ -22,6 +22,7 @@ const ToDoForm: m.Comp<{}, State> = {
       m(
         'button.add-to-do',
         {
+          disabled: ToDoController.newToDoText.length > 0 ? false : true,
           onclick: (e: PointerEvent) => {
             e.preventDefault();
             ToDoController.add();

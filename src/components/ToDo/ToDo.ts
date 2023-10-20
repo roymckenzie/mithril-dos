@@ -1,5 +1,6 @@
 import m from 'mithril';
 import ToDoController from '../../controllers/ToDoController';
+import icon from '../Interface/Icon';
 
 interface Attr {
   toDo: ToDo;
@@ -46,18 +47,17 @@ const ToDoListItem: m.Comp<Attr, State> = {
       'li.to-do[draggable]',
       {
         ondragstart: (event: DragEvent & { target: HTMLElement }) => {
-          event.target.classList.add('dragging');
           if (!event.dataTransfer) return;
           event.dataTransfer.dropEffect = 'move';
           event.dataTransfer.effectAllowed = 'move';
-          event.target.style.cursor = 'grabbing';
           event.dataTransfer.setData('id', toDo.id);
-          event.dataTransfer.setData('text/plain', 'This can be dragged!');
         },
         ondragend: (event: DragEvent & { target: HTMLElement }) => {
-          event.target.classList.remove('dragging');
+          if (!event.dataTransfer) return;
+          event.dataTransfer.clearData();
         },
       },
+      icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
       m(
         'label',
         {
@@ -65,16 +65,17 @@ const ToDoListItem: m.Comp<Attr, State> = {
           for: toDo.trashed ? null : toDo.id,
         },
         toDo.description,
-        toDo.trashed
-          ? null
-          : m(
-              'button.trash-to-do',
-              {
-                onclick: toDo.trashed ? deleteToDo : trashToDo,
-                'data-to-do-id': toDo.id,
-              },
-              'Trash',
-            ),
+
+        m(
+          'button.trash-to-do',
+          {
+            onclick: toDo.trashed ? deleteToDo : trashToDo,
+            'data-to-do-id': toDo.id,
+          },
+          toDo.trashed
+            ? 'Delete'
+            : icon('trash', { class: 'h-4 w-4' }),
+        ),
         toDo.trashed
           ? null
           : m('input[type=checkbox].complete-to-do', {

@@ -11,7 +11,7 @@ const Layout: m.Comp<{}, State> = {
   controller: ToDoController,
   view: ({ children, state: { controller } }) => {
     return m(
-      '.app',
+      '.layout',
       m(Header),
       m(Navigation, {
         completedCount: controller.completed().length,

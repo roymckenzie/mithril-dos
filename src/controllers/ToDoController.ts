@@ -81,9 +81,11 @@ class ToDoController {
   }
 
   add() {
+    if (this.newToDoText.length === 0) return alert('Your to-do appears to be blank.');
     this.toDos.push({
       created: Date.now(),
       id: crypto.randomUUID(),
+      order: 0,
       description: this.newToDoText,
     });
 
