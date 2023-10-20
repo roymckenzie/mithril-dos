@@ -1,7 +1,5 @@
-
 class ToDoController {
-
-  newToDoText = ''
+  newToDoText = '';
   readonly toDos: ToDo[];
 
   constructor(toDos: ToDo[]) {
@@ -9,17 +7,21 @@ class ToDoController {
   }
 
   completed() {
-    const completed = this.notTrashed().filter(toDo => toDo.completed) as CompletedToDo[]
-    return completed.toSorted((a,b) => b.completed - a.completed)
+    const completed = this.notTrashed().filter(
+      toDo => toDo.completed,
+    ) as CompletedToDo[];
+    return completed.toSorted((a, b) => b.completed - a.completed);
   }
 
   notCompleted() {
-    return this.notTrashed().filter(toDo => !toDo.completed).toSorted((a,b) => b.created - a.created);
+    return this.notTrashed()
+      .filter(toDo => !toDo.completed)
+      .toSorted((a, b) => b.created - a.created);
   }
 
   trashed() {
-    const trashed = this.toDos.filter(toDo => toDo.trashed) as TrashedToDo[]
-    return trashed.toSorted((a,b) => b.trashed - a.trashed);
+    const trashed = this.toDos.filter(toDo => toDo.trashed) as TrashedToDo[];
+    return trashed.toSorted((a, b) => b.trashed - a.trashed);
   }
 
   notTrashed() {
@@ -48,7 +50,6 @@ class ToDoController {
     const index = this.targetToDoIndex(id);
     this.toDos[index].trashed = Date.now();
 
-
     this.updateStorage();
   }
 
@@ -67,7 +68,12 @@ class ToDoController {
   }
 
   deleteTrashed() {
-    if (!confirm('Are you sure you want to permanently delete your trashed to-dos?')) return;
+    if (
+      !confirm(
+        'Are you sure you want to permanently delete your trashed to-dos?',
+      )
+    )
+      return;
     this.trashed().forEach(toDo => {
       const index = this.toDos.indexOf(toDo);
       this.toDos.splice(index, 1);
@@ -95,7 +101,7 @@ const toDoStorage = localStorage.getItem('toDos');
 const toDos: ToDo[] = [];
 
 if (toDoStorage) {
-  const _toDos: ToDo[] = JSON.parse(toDoStorage)
+  const _toDos: ToDo[] = JSON.parse(toDoStorage);
   _toDos.forEach(toDo => toDos.push(toDo));
 }
 

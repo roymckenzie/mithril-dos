@@ -6,8 +6,8 @@ interface Attr {
 }
 
 interface State {
-  deleteToDo(event: PointerEvent): void;
   trashToDo(event: PointerEvent): void;
+  deleteToDo(event: PointerEvent): void;
   completeToDo(event: PointerEvent): void;
   unCompleteToDo(event: PointerEvent): void;
 }
@@ -16,7 +16,7 @@ const ToDoListItem: m.Comp<Attr, State> = {
   deleteToDo(event: PointerEvent & { target: HTMLButtonElement }) {
     event.preventDefault();
     event.stopPropagation();
-    if(!confirm('Are you sure you want to completely delete this to-do?')) {
+    if (!confirm('Are you sure you want to completely delete this to-do?')) {
       return;
     }
     const toDoId = event.target.getAttribute('data-to-do-id');
@@ -38,7 +38,10 @@ const ToDoListItem: m.Comp<Attr, State> = {
     event.preventDefault();
     ToDoController.unComplete(event.target.id);
   },
-  view: ({ attrs: { toDo }, state: { completeToDo, unCompleteToDo, trashToDo, deleteToDo } }) => {
+  view: ({
+    attrs: { toDo },
+    state: { completeToDo, unCompleteToDo, trashToDo, deleteToDo },
+  }) => {
     return m(
       'li.to-do[draggable]',
       {
@@ -47,40 +50,42 @@ const ToDoListItem: m.Comp<Attr, State> = {
           if (!event.dataTransfer) return;
           event.dataTransfer.dropEffect = 'move';
           event.dataTransfer.effectAllowed = 'move';
-          event.target.style.cursor = 'grabbing'
+          event.target.style.cursor = 'grabbing';
           event.dataTransfer.setData('id', toDo.id);
           event.dataTransfer.setData('text/plain', 'This can be dragged!');
         },
-        ondragend: (event: DragEvent & { target: HTMLElement}) => {
+        ondragend: (event: DragEvent & { target: HTMLElement }) => {
           event.target.classList.remove('dragging');
-        }
+        },
       },
       m(
         'label',
         {
-          for: toDo.trashed ? null : toDo.id
+          onclick: (e: PointerEvent) => e.preventDefault(),
+          for: toDo.trashed ? null : toDo.id,
         },
         toDo.description,
-        toDo.trashed ? null : m(
-          'button.trash-to-do',
-          {
-            onclick: toDo.trashed ? deleteToDo : trashToDo,
-            'data-to-do-id': toDo.id
-          },
-          'Trash'
-        ),
-        toDo.trashed ? null : m(
-          'input[type=checkbox].complete-to-do',
-          {
-            checked: toDo.completed,
-            id: toDo.id,
-            onclick: toDo.completed ? unCompleteToDo : completeToDo,
-            disabled: toDo.trashed ? true : false
-          }
-        )
+        toDo.trashed
+          ? null
+          : m(
+              'button.trash-to-do',
+              {
+                onclick: toDo.trashed ? deleteToDo : trashToDo,
+                'data-to-do-id': toDo.id,
+              },
+              'Trash',
+            ),
+        toDo.trashed
+          ? null
+          : m('input[type=checkbox].complete-to-do', {
+              checked: toDo.completed,
+              id: toDo.id,
+              onclick: toDo.completed ? unCompleteToDo : completeToDo,
+              disabled: toDo.trashed ? true : false,
+            }),
       ),
     );
-  }
-}
+  },
+};
 
 export default ToDoListItem;
