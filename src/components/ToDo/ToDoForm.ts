@@ -9,7 +9,7 @@ interface State {
 const ToDoForm: m.Comp<{}, State> = {
   controller: ToDoController,
   updateNewToDo(event: KeyboardEvent & { target: HTMLInputElement }) {
-    this.controller.newToDoText = event.target.value;
+    ToDoController.newToDoText = event.target.value;
   },
   view() {
     return m(
