@@ -40,6 +40,7 @@ const ToDoListItem: m.Comp<Attr, State> = {
         event.dataTransfer.clearData();
         break;
       case 'dragover':
+        event.preventDefault();
         targetToDoElement.classList.add('dragover');
         clearTimeout(this.dragLeaveTimeout);
         break;
