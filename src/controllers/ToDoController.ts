@@ -7,16 +7,16 @@ class ToDoController {
   }
 
   completed() {
-    const completed = this.notTrashed().filter(
-      toDo => toDo.completed,
-    ) as CompletedToDo[];
-    return completed.toSorted((a, b) => b.completed - a.completed);
+    const completed = this.notTrashed().filter(toDo => toDo.completed) as CompletedToDo[];
+    return completed
+      .toSorted((a, b) => b.completed - a.completed)
   }
 
   notCompleted() {
     return this.notTrashed()
       .filter(toDo => !toDo.completed)
-      .toSorted((a, b) => b.created - a.created);
+      .toSorted((a, b) => b.created - a.created)
+      .toSorted((a, b) => a.order - b.order);
   }
 
   trashed() {
@@ -68,12 +68,7 @@ class ToDoController {
   }
 
   deleteTrashed() {
-    if (
-      !confirm(
-        'Are you sure you want to permanently delete your trashed to-dos?',
-      )
-    )
-      return;
+    if (!confirm('Are you sure you want to permanently delete your trashed to-dos?')) return;
     this.trashed().forEach(toDo => {
       const index = this.toDos.indexOf(toDo);
       this.toDos.splice(index, 1);
@@ -90,6 +85,15 @@ class ToDoController {
     });
 
     this.newToDoText = '';
+
+    this.updateStorage();
+  }
+
+  reorder(toDoId: string, afterToDoId: string) {
+    const toDoIndex = this.targetToDoIndex(toDoId);
+    const afterToDo = this.toDos.find(toDo => toDo.id === afterToDoId);
+    if (toDoIndex === -1 || !afterToDo) return;
+    this.toDos[toDoIndex].order = afterToDo.order + 0.5;
 
     this.updateStorage();
   }

@@ -10,13 +10,13 @@ interface State {
 
 const Trashed: m.Comp<{}, State> = {
   controller: ToDoController,
-  view: ({ state: { controller } }) => {
+  view() {
     return m(
       'article.completed',
-      controller.trashed().length === 0
+      this.controller.trashed().length === 0
         ? m(NoToDos, 'No trashed to-dos.')
         : null,
-      controller.trashed().length > 0
+      this.controller.trashed().length > 0
         ? m(
             'menu.controls',
             m(
@@ -24,7 +24,7 @@ const Trashed: m.Comp<{}, State> = {
               m(
                 'button.delete-all',
                 {
-                  onclick: () => controller.deleteTrashed(),
+                  onclick: () => this.controller.deleteTrashed(),
                 },
                 icon('trash', { class: 'h-4 w-4' }),
                 'Delete all',
@@ -32,7 +32,7 @@ const Trashed: m.Comp<{}, State> = {
             ),
           )
         : null,
-      m(ToDoList, { toDos: controller.trashed() }),
+      m(ToDoList, { toDos: this.controller.trashed() }),
     );
   },
 };

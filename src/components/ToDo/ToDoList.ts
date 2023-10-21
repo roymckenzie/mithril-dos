@@ -6,10 +6,10 @@ interface Attr {
 }
 
 const ToDoList: m.Component<Attr> = {
-  view: ({ attrs: { toDos } }) => {
+  view({ attrs: { toDos } }) {
     return m(
-      'ul.to-do-list',
-      toDos.map((toDo) => {
+      'ol.to-do-list',
+      toDos.map(toDo => {
         return m(ToDoListItem, { toDo, key: toDo.id });
       }),
     );

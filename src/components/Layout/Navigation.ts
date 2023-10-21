@@ -8,18 +8,19 @@ interface Attr {
 }
 
 const dragEvents: m.Attributes = {
-  ondragover: (event: DragEvent) => {
+  ondragover(event: DragEvent) {
     event.preventDefault();
   },
-  ondragenter: (event: DragEvent & { target: HTMLAnchorElement }) => {
-    event.target.classList.add('dragged-to');
+  ondragenter(event: DragEvent & { target: HTMLAnchorElement }) {
+    event.target.classList.add('dragover');
   },
-  ondragleave: (event: DragEvent & { target: HTMLAnchorElement }) => {
-    event.target.classList.remove('dragged-to');
+  ondragleave(event: DragEvent & { target: HTMLAnchorElement }) {
+    event.target.classList.remove('dragover');
   },
-  ondrop: (event: DragEvent & { target: HTMLAnchorElement }) => {
-    event.target.classList.remove('dragged-to');
-    const toDoId = event.dataTransfer?.getData('id');
+  ondrop(event: DragEvent & { target: HTMLAnchorElement }) {
+    event.target.classList.remove('dragover');
+    if (!event.dataTransfer) return;
+    const toDoId = event.dataTransfer.getData('id');
 
     if (!toDoId) return;
 
@@ -40,7 +41,7 @@ const dragEvents: m.Attributes = {
 };
 
 const Navigation: m.Comp<Attr> = {
-  view: ({ attrs: { notCompletedCount, completedCount, trashedCount } }) => {
+  view({ attrs: { notCompletedCount, completedCount, trashedCount } }) {
     return m(
       'nav.app-navigation',
       m(

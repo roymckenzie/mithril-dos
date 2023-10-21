@@ -10,12 +10,12 @@ interface State {
 
 const Home: m.Comp<{}, State> = {
   controller: ToDoController,
-  view: ({ state: { controller } }) => {
+  view() {
     return m(
       'article.home',
       m(ToDoForm),
-      m(ToDoList, { toDos: controller.notCompleted() }),
-      controller.notCompleted().length === 0
+      m(ToDoList, { toDos: this.controller.notCompleted() }),
+      this.controller.notCompleted().length === 0
         ? m(NoToDos, 'No to-dos. Consider adding one.')
         : null,
     );

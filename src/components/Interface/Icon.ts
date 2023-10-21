@@ -1,11 +1,9 @@
 import m from 'mithril';
-import trashIcon from '../../../public/trash.svg?raw';
-import bars3 from '../../../public/bars-3.svg?raw';
-import bars4 from '../../../public/bars-4.svg?raw';
+import trashIcon from '/trash.svg?raw';
+import bars4 from '/bars-4.svg?raw';
 
 const IconMap = {
   trash: trashIcon,
-  'bars-3': bars3,
   'bars-4': bars4,
 };
 

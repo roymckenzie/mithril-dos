@@ -2,30 +2,29 @@ import m from 'mithril';
 import ToDoController from '../../controllers/ToDoController';
 
 interface State {
+  controller: typeof ToDoController;
   updateNewToDo(event: KeyboardEvent): void;
 }
 
 const ToDoForm: m.Comp<{}, State> = {
+  controller: ToDoController,
   updateNewToDo(event: KeyboardEvent & { target: HTMLInputElement }) {
-    ToDoController.newToDoText = event.target.value;
+    this.controller.newToDoText = event.target.value;
   },
-  view: ({ state: { updateNewToDo } }) => {
+  view() {
     return m(
       'form.to-do-form',
-      m(
-        'input.new-to-do-text[id=new-to-do-input][type=text][placeholder=Type a new to-do.]',
-        {
-          value: ToDoController.newToDoText,
-          onkeyup: updateNewToDo,
-        },
-      ),
+      m('input.new-to-do-text[id=new-to-do-input][type=text][placeholder=Type a new to-do.]', {
+        value: this.controller.newToDoText,
+        onkeyup: this.updateNewToDo,
+      }),
       m(
         'button.add-to-do',
         {
-          disabled: ToDoController.newToDoText.length > 0 ? false : true,
+          disabled: this.controller.newToDoText.length > 0 ? false : true,
           onclick: (e: PointerEvent) => {
             e.preventDefault();
-            ToDoController.add();
+            this.controller.add();
           },
         },
         'Add',

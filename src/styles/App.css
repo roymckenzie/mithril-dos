@@ -6,6 +6,13 @@ body {
   @apply bg-gray-100;
 }
 
+a[rel=external] {
+  &:after {
+    content: ' ↗';
+    @apply text-xs
+  }
+}
+
 .layout {
   @apply sm:max-w-lg sm:mx-auto grid sm:grid-rows-[min-content_auto_auto] sm:grid-cols-[min-content_auto] gap-4 p-4;
 }
@@ -48,7 +55,7 @@ body {
       }
     }
 
-    &.dragged-to {
+    &.dragover {
       @apply bg-indigo-600 text-white;
     }
   }
@@ -63,14 +70,25 @@ body {
 
   .to-do {
     -webkit-user-drag: element;
-    @apply grid grid-cols-[min-content_auto] gap-3 shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
 
-    .drag-handle {
-      @apply text-gray-300 m-3 mr-0 mt-3.5 cursor-grab;
-    }
+    .wrapper {
+      @apply grid grid-cols-[min-content_auto_min-content_min-content] gap-3 p-3 shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
 
-    label {
-      @apply p-3 pl-0 grid grid-cols-[auto_min-content_min-content] gap-3 font-light leading-snug;
+      .drag-handle {
+        @apply text-gray-300 cursor-grab mt-0.5;
+      }
+
+      .to-do-text {
+        @apply font-light leading-snug;
+      }
+
+      .trash-to-do {
+        @apply text-red-500 text-sm cursor-pointer self-start leading-none mt-1;
+
+        .icon {
+          @apply pointer-events-none;
+        }
+      }
 
       .complete-to-do {
         @apply rounded-xl h-6 w-6 cursor-pointer border-gray-300;
@@ -87,26 +105,20 @@ body {
           @apply ring-indigo-400;
         }
       }
+    }
+
+    &.dragging {
+      @apply opacity-50;
 
       .trash-to-do {
-        @apply text-red-500 text-sm cursor-pointer self-start leading-none pt-1;
-
-        .icon {
-          @apply pointer-events-none;
-        }
+        @apply opacity-0;
       }
     }
 
-    &.dragging,
-    &:-webkit-drag {
-      @apply opacity-50;
-
-      label {
-        @apply hover:!cursor-grabbing !cursor-grabbing;
-
-        .trash-to-do {
-          @apply opacity-0;
-        }
+    &.dragover:not(.dragging) {
+      &:after {
+        content: ' ';
+        @apply block pb-10 mt-2 border border-gray-400 border-dashed rounded;
       }
     }
   }

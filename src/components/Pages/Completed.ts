@@ -9,13 +9,13 @@ interface State {
 
 const Completed: m.Comp<{}, State> = {
   controller: ToDoController,
-  view: ({ state: { controller } }) => {
+  view() {
     return m(
       'article.completed',
-      controller.completed().length === 0
+      this.controller.completed().length === 0
         ? m(NoToDos, 'No completed to-dos. Consider completing one.')
         : null,
-      m(ToDoList, { toDos: controller.completed() }),
+      m(ToDoList, { toDos: this.controller.completed() }),
     );
   },
 };

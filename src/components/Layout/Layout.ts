@@ -9,14 +9,14 @@ interface State {
 
 const Layout: m.Comp<{}, State> = {
   controller: ToDoController,
-  view: ({ children, state: { controller } }) => {
+  view({ children }) {
     return m(
       '.layout',
       m(Header),
       m(Navigation, {
-        completedCount: controller.completed().length,
-        notCompletedCount: controller.notCompleted().length,
-        trashedCount: controller.trashed().length,
+        completedCount: this.controller.completed().length,
+        notCompletedCount: this.controller.notCompleted().length,
+        trashedCount: this.controller.trashed().length,
       }),
       m('main.app-main', children),
     );

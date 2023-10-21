@@ -1,7 +1,7 @@
 import m from 'mithril';
 
 const Header: m.Comp = {
-  view: () => {
+  view() {
     return m(
       'header.app-header',
       m(
@@ -10,7 +10,7 @@ const Header: m.Comp = {
         m(
           'p',
           'The to-do app built with ',
-          m('a[href=https://mithril.js.org/][target=_blank]', 'Mithril'),
+          m('a[href=https://mithril.js.org/][target=_blank][rel=external]', 'Mithril'),
           '.',
         ),
       ),
