@@ -70,8 +70,16 @@ a[rel=external] {
 
   .to-do {
 
+    &[draggable=true] .wrapper {
+      @apply grid-cols-[min-content_auto_min-content_min-content];
+
+      .to-do-text {
+        @apply cursor-text;
+      }
+    }
+
     .wrapper {
-      @apply grid grid-cols-[min-content_auto_min-content_min-content] gap-3 p-3 shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
+      @apply grid grid-cols-[auto_min-content_min-content] gap-3 p-3 shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
 
       .drag-handle {
         @apply text-gray-300 cursor-grab mt-0.5;
@@ -79,7 +87,7 @@ a[rel=external] {
 
       .to-do-text,
       #edit-to-do {
-        @apply font-light leading-snug cursor-text;
+        @apply font-light cursor-default leading-snug whitespace-pre-wrap;
       }
 
       .trash-to-do {
@@ -107,6 +115,8 @@ a[rel=external] {
       }
     }
 
+    
+
     &.dragging {
       @apply opacity-50;
 
@@ -127,7 +137,7 @@ a[rel=external] {
     }
 
     #edit-to-do {
-      @apply p-1.5 -m-1.5 -mt-2 border-none ring-0 bg-gray-100;
+      @apply p-1.5 -m-1.5 border-none ring-0 bg-gray-100 resize-none rounded;
     }
   }
 }

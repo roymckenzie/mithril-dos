@@ -76,9 +76,12 @@ function ToDoListItem(): m.Component<Attr> {
   function setEditing() {
     editingToDo = true;
     setTimeout(() => {
-      const input = document.querySelector('#edit-to-do') as HTMLInputElement;
-      input.focus();
-    }, 100);
+      const textArea = document.querySelector('#edit-to-do') as HTMLTextAreaElement;
+      if (!textArea) return;
+      textArea.style.height = 0 + 'px';
+      textArea.style.height = textArea.scrollHeight + 'px';
+      textArea.focus();
+    }, 1);
   }
 
   function descriptionKeyDown(event: KeyboardEvent) {
@@ -87,15 +90,17 @@ function ToDoListItem(): m.Component<Attr> {
     }
   }
 
-  function handleKeyDown(event: KeyboardEvent & { target: HTMLInputElement}, toDoId: string) {
-    if (event.key === 'Enter') {
+  function handleKeyDown(event: KeyboardEvent & { target: HTMLTextAreaElement}, toDoId: string) {
+    if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       updateToDo(toDoId);
     }
   }
 
-  function handleInput(event: InputEvent & { target: HTMLInputElement }) {
+  function handleInput(event: InputEvent & { target: HTMLTextAreaElement }) {
     newToDoDescription = event.target.value;
+    event.target.style.height = 0 + 'px';
+    event.target.style.height = event.target.scrollHeight + 'px';
   }
 
   function updateToDo(toDoId: string) {
@@ -109,8 +114,9 @@ function ToDoListItem(): m.Component<Attr> {
     },
     view({ attrs: { toDo } }) {
       return m(
-        'li.to-do[draggable]',
+        'li.to-do',
         {
+          draggable: (toDo.completed || toDo.trashed) ? false : true,
           id: toDo.id,
           ondragstart: (event: DragEvent) => handleToDoDrag(event, toDo.id),
           ondragend: (event: DragEvent) => handleToDoDrag(event, toDo.id),
@@ -120,13 +126,13 @@ function ToDoListItem(): m.Component<Attr> {
         },
         m(
           'span.wrapper',
-          icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
-          editingToDo
-            ? m('input[type=text][id=edit-to-do]', {
-                onkeydown: (event: KeyboardEvent & { target: HTMLInputElement }) => handleKeyDown(event, toDo.id),
-                oninput: (event: InputEvent & { target: HTMLInputElement }) => handleInput(event), 
+          (toDo.completed || toDo.trashed) ? false : icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
+          editingToDo && (!(toDo.completed || toDo.trashed))
+            ? m('textarea[id=edit-to-do][rows=1]', {
+              value: newToDoDescription,
+                onkeydown: (event: KeyboardEvent & { target: HTMLTextAreaElement }) => handleKeyDown(event, toDo.id),
+                oninput: (event: InputEvent & { target: HTMLTextAreaElement }) => handleInput(event), 
                 onblur: () => updateToDo(toDo.id),
-                value: newToDoDescription
               })
             : m('span.to-do-text[tabindex=0]', { onclick: setEditing, onkeydown: (event: KeyboardEvent) => descriptionKeyDown(event) }, toDo.description),
           m(
