@@ -114,19 +114,18 @@ function ToDoListItem(): m.Component<Attr> {
     },
     view({ attrs: { toDo } }) {
       return m(
-        'li.to-do',
+        'li.to-do[draggable]',
         {
-          draggable: (toDo.completed || toDo.trashed) ? false : true,
           id: toDo.id,
           ondragstart: (event: DragEvent) => handleToDoDrag(event, toDo.id),
           ondragend: (event: DragEvent) => handleToDoDrag(event, toDo.id),
-          ondragover: (event: DragEvent) => handleToDoDrag(event, toDo.id),
-          ondragleave: (event: DragEvent) => handleToDoDrag(event, toDo.id),
-          ondrop: (event: DragEvent) => handleToDoDrag(event, toDo.id),
+          ondragover: (toDo.completed || toDo.trashed) ? null : (event: DragEvent) => handleToDoDrag(event, toDo.id),
+          ondragleave: (toDo.completed || toDo.trashed) ? null : (event: DragEvent) => handleToDoDrag(event, toDo.id),
+          ondrop: (toDo.completed || toDo.trashed) ? null : (event: DragEvent) => handleToDoDrag(event, toDo.id),
         },
         m(
           'span.wrapper',
-          (toDo.completed || toDo.trashed) ? false : icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
+          icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
           editingToDo && (!(toDo.completed || toDo.trashed))
             ? m('textarea[id=edit-to-do][rows=1]', {
               value: newToDoDescription,

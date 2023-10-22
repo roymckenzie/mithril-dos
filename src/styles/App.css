@@ -70,16 +70,8 @@ a[rel=external] {
 
   .to-do {
 
-    &[draggable=true] .wrapper {
-      @apply grid-cols-[min-content_auto_min-content_min-content];
-
-      .to-do-text {
-        @apply cursor-text;
-      }
-    }
-
     .wrapper {
-      @apply grid grid-cols-[auto_min-content_min-content] gap-3 p-3 shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
+      @apply grid grid-cols-[min-content_auto_min-content_min-content] gap-3 p-3 shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
 
       .drag-handle {
         @apply text-gray-300 cursor-grab mt-0.5;
