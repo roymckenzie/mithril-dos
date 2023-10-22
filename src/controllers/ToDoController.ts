@@ -152,6 +152,19 @@ function ToDoController(toDos: ToDo[]) {
   }
 
   /**
+   * Update a ToDo description
+   * 
+   * @param toDoId - ToDo ID
+   * @param newDescription New text for ToDo `description`
+   */
+  function update(toDoId: string, newDescription: string) {
+    const index = targetToDoIndex(toDoId);
+    _toDos[index].description = newDescription;
+
+    updateStorage();
+  }
+
+  /**
    * Reorder a ToDo.
    * 
    * @param toDoId - ToDo ID
@@ -175,6 +188,7 @@ function ToDoController(toDos: ToDo[]) {
 
   return {
     add,
+    update,
     destroy,
 
     complete,

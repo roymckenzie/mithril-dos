@@ -77,8 +77,9 @@ a[rel=external] {
         @apply text-gray-300 cursor-grab mt-0.5;
       }
 
-      .to-do-text {
-        @apply font-light leading-snug;
+      .to-do-text,
+      #edit-to-do {
+        @apply font-light leading-snug cursor-text;
       }
 
       .trash-to-do {
@@ -123,6 +124,10 @@ a[rel=external] {
       &:after {
         @apply mt-2 opacity-100;
       }
+    }
+
+    #edit-to-do {
+      @apply p-1.5 -m-1.5 -mt-2 border-none ring-0 bg-gray-100;
     }
   }
 }

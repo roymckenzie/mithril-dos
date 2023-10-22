@@ -16,9 +16,12 @@ enum ToDoAction {
 function ToDoListItem(): m.Component<Attr> {
   let dragLeaveTimeout: number;
 
-  function handleToDoDrag(event: DragEvent, toDo: ToDo) {
+  var editingToDo = false;
+  var newToDoDescription = '';
+
+  function handleToDoDrag(event: DragEvent, toDoId: string) {
     if (!(event.target instanceof HTMLElement)) return;
-    const targetToDoElement = event.target.closest('.to-do');
+    const targetToDoElement = event.target.closest('.to-do') as HTMLElement;
 
     if (!targetToDoElement) return;
 
@@ -28,7 +31,7 @@ function ToDoListItem(): m.Component<Attr> {
         if (!event.dataTransfer) return;
         event.dataTransfer.dropEffect = 'move';
         event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('id', toDo.id);
+        event.dataTransfer.setData('id', toDoId);
         break;
       case 'dragend':
         targetToDoElement.classList.remove('dragging');
@@ -70,22 +73,62 @@ function ToDoListItem(): m.Component<Attr> {
     ToDoController[action](toDo.id);
   }
 
+  function setEditing() {
+    editingToDo = true;
+    setTimeout(() => {
+      const input = document.querySelector('#edit-to-do') as HTMLInputElement;
+      input.focus();
+    }, 100);
+  }
+
+  function descriptionKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      setEditing();
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent & { target: HTMLInputElement}, toDoId: string) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      updateToDo(toDoId);
+    }
+  }
+
+  function handleInput(event: InputEvent & { target: HTMLInputElement }) {
+    newToDoDescription = event.target.value;
+  }
+
+  function updateToDo(toDoId: string) {
+    ToDoController.update(toDoId, newToDoDescription);
+    editingToDo = false;
+  }
+
   return {
+    oninit({ attrs: { toDo } }) {
+      newToDoDescription = toDo.description;
+    },
     view({ attrs: { toDo } }) {
       return m(
         'li.to-do[draggable]',
         {
           id: toDo.id,
-          ondragstart: (event: DragEvent) => handleToDoDrag(event, toDo),
-          ondragend: (event: DragEvent) => handleToDoDrag(event, toDo),
-          ondragover: (event: DragEvent) => handleToDoDrag(event, toDo),
-          ondragleave: (event: DragEvent) => handleToDoDrag(event, toDo),
-          ondrop: (event: DragEvent) => handleToDoDrag(event, toDo),
+          ondragstart: (event: DragEvent) => handleToDoDrag(event, toDo.id),
+          ondragend: (event: DragEvent) => handleToDoDrag(event, toDo.id),
+          ondragover: (event: DragEvent) => handleToDoDrag(event, toDo.id),
+          ondragleave: (event: DragEvent) => handleToDoDrag(event, toDo.id),
+          ondrop: (event: DragEvent) => handleToDoDrag(event, toDo.id),
         },
         m(
           'span.wrapper',
           icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
-          m('span.to-do-text', toDo.description),
+          editingToDo
+            ? m('input[type=text][id=edit-to-do]', {
+                onkeydown: (event: KeyboardEvent & { target: HTMLInputElement }) => handleKeyDown(event, toDo.id),
+                oninput: (event: InputEvent & { target: HTMLInputElement }) => handleInput(event), 
+                onblur: () => updateToDo(toDo.id),
+                value: newToDoDescription
+              })
+            : m('span.to-do-text[tabindex=0]', { onclick: setEditing, onkeydown: (event: KeyboardEvent) => descriptionKeyDown(event) }, toDo.description),
           m(
             'button.trash-to-do',
             {
