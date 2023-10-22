@@ -7,12 +7,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "mithril": "^2.0.4"
+    "mithril": "^2.2.2"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.6",
     "@types/mithril": "^2.0.8",
     "autoprefixer": "^10.4.16",
+    "mithril-query": "^4.0.1",
     "postcss": "^8.4.31",
     "prettier": "3.0.3",
     "tailwindcss": "^3.3.3",

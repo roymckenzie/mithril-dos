@@ -1,4 +1,4 @@
-interface ToDo {
+type ToDo = {
   id: string;
   description: string;
   created: number;
