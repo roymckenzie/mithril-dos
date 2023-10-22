@@ -114,10 +114,14 @@ a[rel=external] {
       }
     }
 
+    &:after {
+      content: ' ';
+      @apply block pb-10 -mt-[2.6rem] -z-10 relative bg-gray-200 border border-gray-300 border-dashed rounded transition-all opacity-0;
+    }
+
     &.dragover:not(.dragging) {
       &:after {
-        content: ' ';
-        @apply block pb-10 mt-2 border border-gray-400 border-dashed rounded;
+        @apply mt-2 opacity-100;
       }
     }
   }
