@@ -7,7 +7,7 @@ interface Attr {
 }
 
 enum ToDoAction {
-  Delete = 'delete',
+  Destroy = 'destroy',
   Trash = 'trash',
   Complete = 'complete',
   UnComplete = 'unComplete',
@@ -43,7 +43,7 @@ function ToDoListItem(): m.Component<Attr> {
       case 'dragleave':
         dragLeaveTimeout = window.setTimeout(() => {
           targetToDoElement.classList.remove('dragover');
-        }, 100);
+        }, 300);
         break;
       case 'drop':
         if (!event.dataTransfer) return;
@@ -61,7 +61,7 @@ function ToDoListItem(): m.Component<Attr> {
     const toDo = event.target.closest('.to-do');
     if (!toDo) return;
 
-    if (action === ToDoAction.Delete) {
+    if (action === ToDoAction.Destroy) {
       if (!confirm('Are you sure you want to completely delete this to-do?')) {
         return;
       }
@@ -90,7 +90,7 @@ function ToDoListItem(): m.Component<Attr> {
             'button.trash-to-do',
             {
               onclick: toDo.trashed
-                ? (event: PointerEvent) => handleToDoAction(event, ToDoAction.Delete)
+                ? (event: PointerEvent) => handleToDoAction(event, ToDoAction.Destroy)
                 : (event: PointerEvent) => handleToDoAction(event, ToDoAction.Trash),
             },
             toDo.trashed ? 'Delete' : icon('trash', { class: 'h-4 w-4' }),

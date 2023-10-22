@@ -1,109 +1,196 @@
-class ToDoController {
-  readonly toDos: ToDo[];
+function ToDoController(toDos: ToDo[]) {
+  /**
+   * ToDos
+   */
+  const _toDos = toDos;
 
-  constructor(toDos: ToDo[]) {
-    this.toDos = toDos;
+  /**
+   * ToDos marked as completed.
+   * 
+   * @returns {CompletedToDo[]}
+   */
+  function completed() {
+    const completed = notTrashed().filter(toDo => toDo.completed) as CompletedToDo[];
+    return completed.toSorted((a, b) => b.completed - a.completed);
   }
 
-  completed() {
-    const completed = this.notTrashed().filter(toDo => toDo.completed) as CompletedToDo[];
-    return completed
-      .toSorted((a, b) => b.completed - a.completed)
-  }
-
-  notCompleted() {
-    return this.notTrashed()
+  /**
+   * ToDos marked as not completed.
+   * 
+   * @returns {ToDo[]}
+   */
+  function notCompleted() {
+    return notTrashed()
       .filter(toDo => !toDo.completed)
       .toSorted((a, b) => b.created - a.created)
       .toSorted((a, b) => a.order - b.order);
   }
 
-  trashed() {
-    const trashed = this.toDos.filter(toDo => toDo.trashed) as TrashedToDo[];
+  /**
+   * ToDos marked as trashed.
+   * 
+   * @returns {TrashedToDo[]}
+   */
+  function trashed() {
+    const trashed = _toDos.filter(toDo => toDo.trashed) as TrashedToDo[];
     return trashed.toSorted((a, b) => b.trashed - a.trashed);
   }
 
-  notTrashed() {
-    return this.toDos.filter(toDo => !toDo.trashed);
+  /**
+   * ToDos not marked as trashed.
+   * 
+   * @returns {ToDo[]}
+   */
+  function notTrashed() {
+    return _toDos.filter(toDo => !toDo.trashed);
   }
 
-  targetToDoIndex(id: string) {
-    return this.toDos.findIndex(toDo => toDo.id === id);
+  /**
+   * Get the index of a ToDo that has matching id.
+   * 
+   * @param toDoId - ToDo ID
+   * @returns {number | -1} Index of ToDo
+   */
+  function targetToDoIndex(toDoId: string) {
+    return _toDos.findIndex(toDo => toDo.id === toDoId);
   }
 
-  complete(id: string) {
-    const index = this.targetToDoIndex(id);
-    this.toDos[index].completed = Date.now();
+  /**
+   * Mark a ToDo as complete.
+   * 
+   * @param toDoId - ToDo ID
+   */
+  function complete(toDoId: string) {
+    const index = targetToDoIndex(toDoId);
+    _toDos[index].completed = Date.now();
 
-    this.updateStorage();
+    updateStorage();
   }
 
-  unComplete(id: string) {
-    const index = this.targetToDoIndex(id);
-    delete this.toDos[index].completed;
+  /**
+   * Mark a ToDo as not complete.
+   * 
+   * @param toDoId - ToDo ID
+   */
+  function unComplete(toDoId: string) {
+    const index = targetToDoIndex(toDoId);
+    delete _toDos[index].completed;
 
-    this.updateStorage();
+    updateStorage();
   }
 
-  trash(id: string) {
-    const index = this.targetToDoIndex(id);
-    this.toDos[index].trashed = Date.now();
+  /**
+   * Mark a ToDo as trashed (but not destroyed).
+   * 
+   * @param toDoId - ToDo ID
+   */
+  function trash(toDoId: string) {
+    const index = targetToDoIndex(toDoId);
+    _toDos[index].trashed = Date.now();
 
-    this.updateStorage();
+    updateStorage();
   }
 
-  unTrash(id: string) {
-    const index = this.targetToDoIndex(id);
-    delete this.toDos[index].trashed;
+  /**
+   * Mark a ToDo as not trashed.
+   * 
+   * @param toDoId - ToDo ID
+   */
+  function unTrash(toDoId: string) {
+    const index = targetToDoIndex(toDoId);
+    delete _toDos[index].trashed;
 
-    this.updateStorage();
+    updateStorage();
   }
 
-  delete(id: string) {
-    const index = this.targetToDoIndex(id);
-    this.toDos.splice(index, 1);
+  /**
+   * Permantently destroy a ToDo.
+   * 
+   * @param toDoId - ToDo ID
+   */
+  function destroy(toDoId: string) {
+    const index = targetToDoIndex(toDoId);
+    _toDos.splice(index, 1);
 
-    this.updateStorage();
+    updateStorage();
   }
 
-  deleteTrashed() {
+  /**
+   * Permanently destroy all ToDos marked as trashed.
+   */
+  function destroyAllTrashed() {
     if (!confirm('Are you sure you want to permanently delete your trashed to-dos?')) return;
-    this.trashed().forEach(toDo => {
-      const index = this.toDos.indexOf(toDo);
-      this.toDos.splice(index, 1);
+    trashed().forEach(toDo => {
+      const index = _toDos.indexOf(toDo);
+      _toDos.splice(index, 1);
     });
+
+    updateStorage();
   }
 
-  add(toDoText: string): boolean {
-    console.log(toDoText)
+  /**
+   * Add a new ToDo.
+   * 
+   * @param toDoText - Text of new ToDo
+   * @returns {boolean} `true` if the operation was successful, `false` if it was not
+   */
+  function add(toDoText: string): boolean {
     if (toDoText.length === 0) {
       alert('Your to-do appears to be blank.');
       return false;
-    };
+    }
 
-    this.toDos.push({
+    _toDos.push({
       created: Date.now(),
       id: crypto.randomUUID(),
       order: 0,
       description: toDoText,
     });
 
-    this.updateStorage();
+    updateStorage();
     return true;
   }
 
-  reorder(toDoId: string, afterToDoId: string) {
-    const toDoIndex = this.targetToDoIndex(toDoId);
-    const afterToDo = this.toDos.find(toDo => toDo.id === afterToDoId);
+  /**
+   * Reorder a ToDo.
+   * 
+   * @param toDoId - ToDo ID
+   * @param afterToDoId - ToDo ID to place ToDo with `toDoId` after
+   */
+  function reorder(toDoId: string, afterToDoId: string) {
+    const toDoIndex = targetToDoIndex(toDoId);
+    const afterToDo = _toDos.find(toDo => toDo.id === afterToDoId);
     if (toDoIndex === -1 || !afterToDo) return;
-    this.toDos[toDoIndex].order = afterToDo.order + 0.5;
+    _toDos[toDoIndex].order = afterToDo.order + 0.5;
 
-    this.updateStorage();
+    updateStorage();
   }
 
-  updateStorage() {
-    localStorage.setItem('toDos', JSON.stringify(this.toDos));
+  /**
+   * Update `localStorage`
+   */
+  function updateStorage() {
+    localStorage.setItem('toDos', JSON.stringify(_toDos));
   }
+
+  return {
+    add,
+    destroy,
+
+    complete,
+    unComplete,
+
+    trash,
+    unTrash,
+
+    reorder,
+
+    destroyAllTrashed,
+
+    completed,
+    notCompleted,
+    trashed,
+  };
 }
 
 const toDoStorage = localStorage.getItem('toDos');
@@ -114,4 +201,4 @@ if (toDoStorage) {
   _toDos.forEach(toDo => toDos.push(toDo));
 }
 
-export default new ToDoController(toDos);
+export default ToDoController(toDos);

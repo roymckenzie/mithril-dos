@@ -18,7 +18,7 @@ function Trashed(): m.Component {
                 m(
                   'button.delete-all',
                   {
-                    onclick: () => ToDoController.deleteTrashed(),
+                    onclick: () => ToDoController.destroyAllTrashed(),
                   },
                   icon('trash', { class: 'h-4 w-4' }),
                   'Delete all',

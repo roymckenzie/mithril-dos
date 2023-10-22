@@ -69,7 +69,6 @@ a[rel=external] {
   @apply grid p-0 gap-2;
 
   .to-do {
-    -webkit-user-drag: element;
 
     .wrapper {
       @apply grid grid-cols-[min-content_auto_min-content_min-content] gap-3 p-3 shadow-sm hover:shadow-md bg-white rounded-md ring-1 ring-gray-200;
