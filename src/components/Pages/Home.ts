@@ -4,22 +4,19 @@ import ToDoForm from '../ToDo/ToDoForm';
 import NoToDos from '../ToDo/NoToDos';
 import ToDoController from '../../controllers/ToDoController';
 
-interface State {
-  controller: typeof ToDoController;
+function Home(): m.Component {
+  return {
+    view() {
+      return m(
+        'article.home',
+        m(ToDoForm),
+        m(ToDoList, { toDos: ToDoController.notCompleted() }),
+        ToDoController.notCompleted().length === 0
+          ? m(NoToDos, 'No to-dos. Consider adding one.')
+          : null,
+      );
+    },
+  };
 }
-
-const Home: m.Comp<{}, State> = {
-  controller: ToDoController,
-  view() {
-    return m(
-      'article.home',
-      m(ToDoForm),
-      m(ToDoList, { toDos: this.controller.notCompleted() }),
-      this.controller.notCompleted().length === 0
-        ? m(NoToDos, 'No to-dos. Consider adding one.')
-        : null,
-    );
-  },
-};
 
 export default Home;

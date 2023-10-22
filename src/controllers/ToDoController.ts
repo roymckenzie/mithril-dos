@@ -1,5 +1,4 @@
 class ToDoController {
-  newToDoText = '';
   readonly toDos: ToDo[];
 
   constructor(toDos: ToDo[]) {
@@ -75,18 +74,22 @@ class ToDoController {
     });
   }
 
-  add() {
-    if (this.newToDoText.length === 0) return alert('Your to-do appears to be blank.');
+  add(toDoText: string): boolean {
+    console.log(toDoText)
+    if (toDoText.length === 0) {
+      alert('Your to-do appears to be blank.');
+      return false;
+    };
+
     this.toDos.push({
       created: Date.now(),
       id: crypto.randomUUID(),
       order: 0,
-      description: this.newToDoText,
+      description: toDoText,
     });
 
-    this.newToDoText = '';
-
     this.updateStorage();
+    return true;
   }
 
   reorder(toDoId: string, afterToDoId: string) {

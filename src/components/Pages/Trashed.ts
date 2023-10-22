@@ -1,40 +1,35 @@
 import m from 'mithril';
-import ToDoList from '../ToDo/ToDoList';
 import ToDoController from '../../controllers/ToDoController';
-import NoToDos from '../ToDo/NoToDos';
 import icon from '../Interface/Icon';
+import NoToDos from '../ToDo/NoToDos';
+import ToDoList from '../ToDo/ToDoList';
 
-interface State {
-  controller: typeof ToDoController;
-}
-
-const Trashed: m.Comp<{}, State> = {
-  controller: ToDoController,
-  view() {
-    return m(
-      'article.completed',
-      this.controller.trashed().length === 0
-        ? m(NoToDos, 'No trashed to-dos.')
-        : null,
-      this.controller.trashed().length > 0
-        ? m(
-            'menu.controls',
-            m(
-              'li',
+function Trashed(): m.Component {
+  return {
+    view() {
+      return m(
+        'article.completed',
+        ToDoController.trashed().length === 0 ? m(NoToDos, 'No trashed to-dos.') : null,
+        ToDoController.trashed().length > 0
+          ? m(
+              'menu.controls',
               m(
-                'button.delete-all',
-                {
-                  onclick: () => this.controller.deleteTrashed(),
-                },
-                icon('trash', { class: 'h-4 w-4' }),
-                'Delete all',
+                'li',
+                m(
+                  'button.delete-all',
+                  {
+                    onclick: () => ToDoController.deleteTrashed(),
+                  },
+                  icon('trash', { class: 'h-4 w-4' }),
+                  'Delete all',
+                ),
               ),
-            ),
-          )
-        : null,
-      m(ToDoList, { toDos: this.controller.trashed() }),
-    );
-  },
-};
+            )
+          : null,
+        m(ToDoList, { toDos: ToDoController.trashed() }),
+      );
+    },
+  };
+}
 
 export default Trashed;

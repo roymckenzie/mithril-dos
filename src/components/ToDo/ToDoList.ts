@@ -5,15 +5,17 @@ interface Attr {
   toDos: ToDo[];
 }
 
-const ToDoList: m.Component<Attr> = {
-  view({ attrs: { toDos } }) {
-    return m(
-      'ol.to-do-list',
-      toDos.map(toDo => {
-        return m(ToDoListItem, { toDo, key: toDo.id });
-      }),
-    );
-  },
-};
+function ToDoList(): m.Component<Attr> {
+  return {
+    view({ attrs: { toDos } }) {
+      return m(
+        'ol.to-do-list',
+        toDos.map(toDo => {
+          return m(ToDoListItem, { toDo, key: toDo.id });
+        }),
+      );
+    },
+  };
+}
 
 export default ToDoList;

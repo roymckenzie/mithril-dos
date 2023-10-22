@@ -1,36 +1,34 @@
 import m from 'mithril';
 import ToDoController from '../../controllers/ToDoController';
 
-interface State {
-  controller: typeof ToDoController;
-  updateNewToDo(event: KeyboardEvent): void;
-}
+function ToDoForm(): m.Component {
+  var newToDoText = '';
 
-const ToDoForm: m.Comp<{}, State> = {
-  controller: ToDoController,
-  updateNewToDo(event: KeyboardEvent & { target: HTMLInputElement }) {
-    ToDoController.newToDoText = event.target.value;
-  },
-  view() {
-    return m(
-      'form.to-do-form',
-      m('input.new-to-do-text[id=new-to-do-input][type=text][placeholder=Type a new to-do.]', {
-        value: this.controller.newToDoText,
-        onkeyup: this.updateNewToDo,
-      }),
-      m(
-        'button.add-to-do',
-        {
-          disabled: this.controller.newToDoText.length > 0 ? false : true,
-          onclick: (e: PointerEvent) => {
-            e.preventDefault();
-            this.controller.add();
+  return {
+    view() {
+      return m(
+        'form.to-do-form',
+        m('input.new-to-do-text[id=new-to-do-input][type=text][placeholder=Type a new to-do.]', {
+          value: newToDoText,
+          onkeyup: (event: KeyboardEvent & { target: HTMLInputElement }) =>
+            (newToDoText = event.target.value),
+        }),
+        m(
+          'button.add-to-do',
+          {
+            disabled: newToDoText.length > 0 ? false : true,
+            onclick: (event: PointerEvent) => {
+              event.preventDefault();
+              if (ToDoController.add(newToDoText)) {
+                newToDoText = '';
+              }
+            },
           },
-        },
-        'Add',
-      ),
-    );
-  },
-};
+          'Add',
+        ),
+      );
+    },
+  };
+}
 
 export default ToDoForm;

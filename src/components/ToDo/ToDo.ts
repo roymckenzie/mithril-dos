@@ -13,14 +13,10 @@ enum ToDoAction {
   UnComplete = 'unComplete',
 }
 
-interface State {
-  dragLeaveTimeout?: number;
-  handleToDoAction(event: PointerEvent, action: ToDoAction): void;
-  handleToDoDrag(event: DragEvent, toDo: ToDo): void;
-}
+function ToDoListItem(): m.Component<Attr> {
+  let dragLeaveTimeout: number;
 
-const ToDoListItem: m.Comp<Attr, State> = {
-  handleToDoDrag(event: DragEvent, toDo: ToDo) {
+  function handleToDoDrag(event: DragEvent, toDo: ToDo) {
     if (!(event.target instanceof HTMLElement)) return;
     const targetToDoElement = event.target.closest('.to-do');
 
@@ -42,10 +38,10 @@ const ToDoListItem: m.Comp<Attr, State> = {
       case 'dragover':
         event.preventDefault();
         targetToDoElement.classList.add('dragover');
-        clearTimeout(this.dragLeaveTimeout);
+        clearTimeout(dragLeaveTimeout);
         break;
       case 'dragleave':
-        this.dragLeaveTimeout = setTimeout(() => {
+        dragLeaveTimeout = window.setTimeout(() => {
           targetToDoElement.classList.remove('dragover');
         }, 100);
         break;
@@ -57,8 +53,9 @@ const ToDoListItem: m.Comp<Attr, State> = {
         ToDoController.reorder(draggedToDoId, targetToDoElement.id);
         break;
     }
-  },
-  handleToDoAction(event, action) {
+  }
+
+  function handleToDoAction(event: PointerEvent, action: ToDoAction) {
     if (!(event.target instanceof HTMLElement)) return;
     event.preventDefault();
     const toDo = event.target.closest('.to-do');
@@ -71,44 +68,47 @@ const ToDoListItem: m.Comp<Attr, State> = {
     }
 
     ToDoController[action](toDo.id);
-  },
-  view({ attrs: { toDo } }) {
-    return m(
-      'li.to-do[draggable]',
-      {
-        id: toDo.id,
-        ondragstart: (event: DragEvent) => this.handleToDoDrag(event, toDo),
-        ondragend: (event: DragEvent) => this.handleToDoDrag(event, toDo),
-        ondragover: (event: DragEvent) => this.handleToDoDrag(event, toDo),
-        ondragleave: (event: DragEvent) => this.handleToDoDrag(event, toDo),
-        ondrop: (event: DragEvent) => this.handleToDoDrag(event, toDo),
-      },
-      m(
-        'span.wrapper',
-        icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
-        m('span.to-do-text', toDo.description),
+  }
+
+  return {
+    view({ attrs: { toDo } }) {
+      return m(
+        'li.to-do[draggable]',
+        {
+          id: toDo.id,
+          ondragstart: (event: DragEvent) => handleToDoDrag(event, toDo),
+          ondragend: (event: DragEvent) => handleToDoDrag(event, toDo),
+          ondragover: (event: DragEvent) => handleToDoDrag(event, toDo),
+          ondragleave: (event: DragEvent) => handleToDoDrag(event, toDo),
+          ondrop: (event: DragEvent) => handleToDoDrag(event, toDo),
+        },
         m(
-          'button.trash-to-do',
-          {
-            onclick: toDo.trashed
-              ? (event: PointerEvent) => this.handleToDoAction(event, ToDoAction.Delete)
-              : (event: PointerEvent) => this.handleToDoAction(event, ToDoAction.Trash),
-          },
-          toDo.trashed ? 'Delete' : icon('trash', { class: 'h-4 w-4' }),
+          'span.wrapper',
+          icon('bars-4', { class: 'h-5 w-5 drag-handle' }),
+          m('span.to-do-text', toDo.description),
+          m(
+            'button.trash-to-do',
+            {
+              onclick: toDo.trashed
+                ? (event: PointerEvent) => handleToDoAction(event, ToDoAction.Delete)
+                : (event: PointerEvent) => handleToDoAction(event, ToDoAction.Trash),
+            },
+            toDo.trashed ? 'Delete' : icon('trash', { class: 'h-4 w-4' }),
+          ),
+          toDo.trashed
+            ? null
+            : m('input[type=checkbox].complete-to-do', {
+                checked: toDo.completed,
+                name: 'complete-to-do',
+                onclick: toDo.completed
+                  ? (event: PointerEvent) => handleToDoAction(event, ToDoAction.UnComplete)
+                  : (event: PointerEvent) => handleToDoAction(event, ToDoAction.Complete),
+                disabled: toDo.trashed ? true : false,
+              }),
         ),
-        toDo.trashed
-          ? null
-          : m('input[type=checkbox].complete-to-do', {
-              checked: toDo.completed,
-              name: 'complete-to-do',
-              onclick: toDo.completed
-                ? (event: PointerEvent) => this.handleToDoAction(event, ToDoAction.UnComplete)
-                : (event: PointerEvent) => this.handleToDoAction(event, ToDoAction.Complete),
-              disabled: toDo.trashed ? true : false,
-            }),
-      ),
-    );
-  },
-};
+      );
+    },
+  };
+}
 
 export default ToDoListItem;
